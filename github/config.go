@@ -75,7 +75,7 @@ func (c *Config) Clients() (interface{}, error) {
 
 	owner.name = c.Owner
 	owner.IsOrganization = false
-	remoteOrg, _, err := owner.v3client.Organizations.Get(ctx, owner.name)
+	remoteOrg, _, _ := owner.v3client.Organizations.Get(ctx, owner.name)
 	if remoteOrg != nil {
 		owner.IsOrganization = true
 		owner.id = remoteOrg.GetID()

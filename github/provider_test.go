@@ -52,6 +52,9 @@ func testAccPreCheck(t *testing.T) {
 	if v := os.Getenv("GITHUB_TOKEN"); v == "" {
 		t.Fatal("GITHUB_TOKEN must be set for acceptance tests")
 	}
+	if v := os.Getenv("GITHUB_BASE_URL"); v == "" {
+		t.Fatal("GITHUB_BASE_URL must be set for acceptance tests")
+	}
 	if v := os.Getenv("GITHUB_OWNER"); v == "" {
 		t.Fatal("GITHUB_OWNER must be set for acceptance tests")
 	}
@@ -182,14 +185,6 @@ func configProviderIndividualOwner(user string) string {
 provider "github" {
 	owner = "%s"
 }`, user)
-}
-
-func configProviderToken(token string) string {
-	return fmt.Sprintf(`
-provider "github" {
-    token = "%s"
-}
-`, token)
 }
 
 const userResponseBody = `{
