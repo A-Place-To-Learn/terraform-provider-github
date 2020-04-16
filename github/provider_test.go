@@ -52,9 +52,6 @@ func TestProvider_impl(t *testing.T) {
 }
 
 func testAccPreCheck(t *testing.T) {
-	if v := os.Getenv("GITHUB_BASE_URL"); v == "" {
-		t.Fatal("GITHUB_BASE_URL must be set for acceptance tests")
-	}
 	if v := os.Getenv("GITHUB_TOKEN"); v == "" {
 		t.Fatal("GITHUB_TOKEN must be set for acceptance tests")
 	}
@@ -72,6 +69,9 @@ func testAccPreCheck(t *testing.T) {
 	}
 	if v := os.Getenv("GITHUB_TEMPLATE_REPOSITORY_RELEASE_ID"); v == "" {
 		t.Fatal("GITHUB_TEMPLATE_REPOSITORY_RELEASE_ID must be set for acceptance tests")
+	}
+	if v := os.Getenv("GITHUB_BASE_URL"); v == "" {
+		os.Setenv("GITHUB_BASE_URL", "https://api.github.com/")
 	}
 }
 
