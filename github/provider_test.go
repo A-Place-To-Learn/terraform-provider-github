@@ -19,6 +19,7 @@ var testUser string = os.Getenv("GITHUB_TEST_USER")
 var testCollaborator string = os.Getenv("GITHUB_TEST_COLLABORATOR")
 var testOrganization string = os.Getenv("GITHUB_ORGANIZATION")
 var isEnterprise string = os.Getenv("ENTERPRISE_ACCOUNT")
+var apiVersion string = os.Getenv("GITHUB_REST_API_VERSION")
 
 var testAccProviders map[string]terraform.ResourceProvider
 var testAccProviderFactories func(providers *[]*schema.Provider) map[string]terraform.ResourceProviderFactory
@@ -51,6 +52,9 @@ func TestProvider_impl(t *testing.T) {
 }
 
 func testAccPreCheck(t *testing.T) {
+	if v := os.Getenv("GITHUB_BASE_URL"); v == "" {
+		t.Fatal("GITHUB_BASE_URL must be set for acceptance tests")
+	}
 	if v := os.Getenv("GITHUB_TOKEN"); v == "" {
 		t.Fatal("GITHUB_TOKEN must be set for acceptance tests")
 	}
@@ -197,10 +201,15 @@ func TestAccProvider_insecure(t *testing.T) {
 
 func githubTLSApiMock(port, certFile, keyFile string, t *testing.T) (string, func() error) {
 	mux := http.NewServeMux()
-	mux.HandleFunc("/users/hashibot", testRespondJson(userResponseBody))
-	mux.HandleFunc("/users/hashibot/gpg_keys", testRespondJson(gpgKeysResponseBody))
-	mux.HandleFunc("/users/hashibot/keys", testRespondJson(keysResponseBody))
-	mux.HandleFunc("/orgs/"+testOrganization, testRespondJson(orgResponseBody(port)))
+	if apiVersion == "" {
+		apiVersion = "v3"
+	}
+	userPath := fmt.Sprintf("/%s/users/hashibot", apiVersion)
+	orgPath := fmt.Sprintf("/%s/orgs/%s", apiVersion, testOrganization)
+	mux.HandleFunc(userPath, testRespondJson(userResponseBody))
+	mux.HandleFunc(userPath+"/gpg_keys", testRespondJson(gpgKeysResponseBody))
+	mux.HandleFunc(userPath+"/keys", testRespondJson(keysResponseBody))
+	mux.HandleFunc(orgPath, testRespondJson(orgResponseBody(port)))
 
 	server := &http.Server{
 		Addr:    ":" + port,
@@ -321,7 +330,7 @@ const keysResponseBody = `[
 ]`
 
 func orgResponseBody(port string) string {
-	url := fmt.Sprintf(`https://localhost:%s/orgs/%s`, port, testOrganization)
+	url := fmt.Sprintf(`https://localhost:%s/v3/orgs/%s`, port, testOrganization)
 	return fmt.Sprintf(`
 {
 	"login": "%s",
