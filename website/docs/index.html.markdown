@@ -38,7 +38,7 @@ The following arguments are supported in the `provider` block:
 
 * `owner` - (Optional) This is the target GitHub organization or a user to manage. The account
   corresponding to the token will need "owner" privileges for this organization. It must be provided, but
-  it can also be sourced from the `GITHUB_OWNER` environment variable.
+  it can also be sourced from the `GH_OWNER` environment variable.
 
 * `organization` - (DEPRICATED) This is the target GitHub organization or a user to manage. The account
   corresponding to the token will need "organization" privileges for this organization. It must be provided, but
@@ -46,7 +46,7 @@ The following arguments are supported in the `provider` block:
 
 * `base_url` - (Optional) This is the target GitHub base API endpoint. Providing a value is a
   requirement when working with GitHub Enterprise.  It is optional to provide this value and
-  it can also be sourced from the `GITHUB_BASE_URL` environment variable.  The value must end with a slash.
+  it can also be sourced from the `GH_BASE_URL` environment variable.  The value must end with a slash.
   `https://github.someorg.example/api/`.
 
 * `insecure` - (Optional) Whether server should be accessed without verifying the TLS certificate.

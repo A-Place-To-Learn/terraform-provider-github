@@ -711,8 +711,8 @@ func testAccCheckGithubRepositoryDestroy(s *terraform.State) error {
 }
 
 func testAccCreateRepositoryBranch(branch, repository string) error {
-	baseURL := os.Getenv("GITHUB_BASE_URL")
-	owner := os.Getenv("GITHUB_OWNER")
+	baseURL := os.Getenv("GH_BASE_URL")
+	owner := os.Getenv("GH_OWNER")
 	token := os.Getenv("GITHUB_TOKEN")
 
 	config := Config{
@@ -896,7 +896,7 @@ resource "github_repository" "foo" {
 
 func testAccGithubRepositoryCreateFromTemplate(randString string) string {
 
-	owner := os.Getenv("GITHUB_OWNER")
+	owner := os.Getenv("GH_OWNER")
 	repository := os.Getenv("GITHUB_TEMPLATE_REPOSITORY")
 
 	return fmt.Sprintf(`

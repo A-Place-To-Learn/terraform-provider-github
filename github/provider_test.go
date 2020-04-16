@@ -16,7 +16,7 @@ import (
 
 var testUser string = os.Getenv("GITHUB_TEST_USER")
 var testCollaborator string = os.Getenv("GITHUB_TEST_COLLABORATOR")
-var testOwner string = os.Getenv("GITHUB_OWNER")
+var testOwner string = os.Getenv("GH_OWNER")
 
 var testAccProviders map[string]terraform.ResourceProvider
 var testAccProviderFactories func(providers *[]*schema.Provider) map[string]terraform.ResourceProviderFactory
@@ -52,11 +52,11 @@ func testAccPreCheck(t *testing.T) {
 	if v := os.Getenv("GITHUB_TOKEN"); v == "" {
 		t.Fatal("GITHUB_TOKEN must be set for acceptance tests")
 	}
-	if v := os.Getenv("GITHUB_BASE_URL"); v == "" {
-		t.Fatal("GITHUB_BASE_URL must be set for acceptance tests")
+	if v := os.Getenv("GH_BASE_URL"); v == "" {
+		t.Fatal("GH_BASE_URL must be set for acceptance tests")
 	}
-	if v := os.Getenv("GITHUB_OWNER"); v == "" {
-		t.Fatal("GITHUB_OWNER must be set for acceptance tests")
+	if v := os.Getenv("GH_OWNER"); v == "" {
+		t.Fatal("GH_OWNER must be set for acceptance tests")
 	}
 	if v := os.Getenv("GITHUB_TEST_USER"); v == "" {
 		t.Fatal("GITHUB_TEST_USER must be set for acceptance tests")
@@ -83,7 +83,7 @@ func TestAccProvider_owner(t *testing.T) {
 		CheckDestroy: testAccCheckGithubMembershipDestroy,
 		Steps: []resource.TestStep{
 			{
-				// Test organization as owner.  Because GITHUB_OWNER should be set for these tests, we'll pass an
+				// Test organization as owner.  Because GH_OWNER should be set for these tests, we'll pass an
 				// empty provider block to unset the owner
 				Config: configProviderOwner + testAccCheckGithubUserDataSourceConfig(username),
 				Check: resource.ComposeAggregateTestCheckFunc(
@@ -92,7 +92,7 @@ func TestAccProvider_owner(t *testing.T) {
 				),
 			},
 			{
-				// Test individual as owner, but resource requires organization.  Because GITHUB_OWNER should be
+				// Test individual as owner, but resource requires organization.  Because GH_OWNER should be
 				// set for these tests, we'll pass an individual for `owner` to unset the owner
 				Config:      configProviderIndividualOwner(testUser) + testAccGithubMembershipConfig(username),
 				ExpectError: regexp.MustCompile("This resource requires a GitHub organization to be set as the owner in the provider."),
@@ -117,11 +117,11 @@ func TestAccProvider_insecure(t *testing.T) {
 		}
 	}()
 
-	oldBaseUrl := os.Getenv("GITHUB_BASE_URL")
-	defer os.Setenv("GITHUB_BASE_URL", oldBaseUrl)
+	oldBaseUrl := os.Getenv("GH_BASE_URL")
+	defer os.Setenv("GH_BASE_URL", oldBaseUrl)
 
 	// Point provider to mock API with self-signed cert
-	os.Setenv("GITHUB_BASE_URL", url)
+	os.Setenv("GH_BASE_URL", url)
 
 	insecureProviderConfig := `provider "github" {
 	insecure = true

@@ -17,13 +17,13 @@ func sharedConfigForRegion(region string) (interface{}, error) {
 		return nil, fmt.Errorf("empty GITHUB_TOKEN")
 	}
 
-	if os.Getenv("GITHUB_OWNER") == "" {
-		return nil, fmt.Errorf("empty GITHUB_OWNER")
+	if os.Getenv("GH_OWNER") == "" {
+		return nil, fmt.Errorf("empty GH_OWNER")
 	}
 
 	config := Config{
 		Token:   os.Getenv("GITHUB_TOKEN"),
-		Owner:   os.Getenv("GITHUB_OWNER"),
+		Owner:   os.Getenv("GH_OWNER"),
 		BaseURL: "",
 	}
 

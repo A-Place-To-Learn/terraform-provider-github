@@ -17,7 +17,7 @@ func Provider() terraform.ResourceProvider {
 			"owner": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("GITHUB_OWNER", nil),
+				DefaultFunc: schema.EnvDefaultFunc("GH_OWNER", nil),
 				Description: descriptions["owner"],
 			},
 			"organization": {
@@ -30,7 +30,7 @@ func Provider() terraform.ResourceProvider {
 			"base_url": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("GITHUB_BASE_URL", "https://api.github.com/"),
+				DefaultFunc: schema.EnvDefaultFunc("GH_BASE_URL", "https://api.github.com/"),
 				Description: descriptions["base_url"],
 			},
 			"insecure": {
